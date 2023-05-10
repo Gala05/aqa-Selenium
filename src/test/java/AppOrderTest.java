@@ -2,6 +2,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -43,6 +44,29 @@ public class AppOrderTest {
         assertEquals(expected,actual);
     }
     @Test
+    void shouldTestRequiredName() {
+        driver.get("http://localhost:9999");
+        driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79098885554");
+        driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
+        driver.findElement(By.className("button")).click();
+        String expected = "Поле обязательно для заполнения";
+        String actual =
+                driver.findElement(By.cssSelector("div .input_invalid span.input__sub")).getText().trim();
+        assertEquals(expected,actual);
+    }
+
+    @Test
+    void shouldTestRequiredPhone() {
+        driver.get("http://localhost:9999");
+        driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Василий Васильев");
+        driver.findElement(By.cssSelector("[data-test-id='agreement']")).click();
+        driver.findElement(By.className("button")).click();
+        String expected = "Поле обязательно для заполнения";
+        String actual =
+                driver.findElement(By.cssSelector("div .input_invalid span.input__sub")).getText().trim();
+        assertEquals(expected,actual);
+    }
+    @Test
     void shouldTestErrorName() {
         driver.get("http://localhost:9999");
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("kjhkjhkjh");
@@ -66,5 +90,19 @@ public class AppOrderTest {
         String actual =
                 driver.findElement(By.cssSelector("div .input_invalid span.input__sub")).getText().trim();
         assertEquals(expected,actual);
+    }
+
+    @Test
+    void shouldTestErrorCheck() {
+        driver.get("http://localhost:9999");
+        driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Василий Васильев");
+        driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("32233222");
+        driver.findElement(By.className("button")).click();
+        String expected = "Я соглашаюсь с условиями обработки и использования моих персональных данных и разрешаю " +
+                "сделать запрос в бюро кредитных историй";
+
+        WebElement element = driver.findElement(By.className("checkbox__text"));
+        String actual = element.getText();
+        assertEquals(expected, actual);
     }
 }
