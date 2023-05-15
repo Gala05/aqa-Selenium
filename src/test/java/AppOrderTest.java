@@ -96,13 +96,13 @@ public class AppOrderTest {
     void shouldTestErrorCheck() {
         driver.get("http://localhost:9999");
         driver.findElement(By.cssSelector("[data-test-id='name'] input")).sendKeys("Василий Васильев");
-        driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("32233222");
+        driver.findElement(By.cssSelector("[data-test-id='phone'] input")).sendKeys("+79098885554");
         driver.findElement(By.className("button")).click();
         String expected = "Я соглашаюсь с условиями обработки и использования моих персональных данных и разрешаю " +
                 "сделать запрос в бюро кредитных историй";
 
         String actual =
-                driver.findElement(By.cssSelector("[data-test-id='agreement'] .checkbox__text")).getText().trim();
+                driver.findElement(By.cssSelector("[data-test-id='agreement'].input_invalid .checkbox__text")).getText().trim();
         assertEquals(expected, actual);
     }
 }
